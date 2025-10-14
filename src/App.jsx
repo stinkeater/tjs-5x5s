@@ -4,74 +4,104 @@ import CustomizeView from "./CustomizeView";
 import HistoryView from "./HistoryView";
 
 export default function App() {
-  const [currentTab, setCurrentTab] = useState("Workout");
-  const [workoutA, setWorkoutA] = useState([]);
-  const [workoutB, setWorkoutB] = useState([]);
-  const [lastWorkout, setLastWorkout] = useState(null);
-  const [history, setHistory] = useState([]);
+  // State
+  const [currentWorkoutType, setCurrentWorkoutType] = useState(
+    localStorage.getItem("lastWorkout") === "A" ? "B" : "A"
+  );
+
+  const defaultWorkoutA = [
+  { name: "Squat", weight: 40, reps: 5, sets: 5, setsCompleted: [false, false, false, false, false] },
+  { name: "Bench Press", weight: 40, reps: 5, sets: 5, setsCompleted: [false, false, false, false, false] },
+  { name: "Mid Row", weight: 25, reps: 12, sets: 3, setsCompleted: [false, false, false, false, false] },
+  { name: "Lat Pulldown", weight: 20, reps: 12, sets: 3, setsCompleted: [false, false, false, false, false] },
+];
+
+const defaultWorkoutB = [
+  { name: "Squat", weight: 40, reps: 5, sets: 5, setsCompleted: [false, false, false, false, false] },
+  { name: "Overhead Press", weight: 40, reps: 5, sets: 5, setsCompleted: [false, false, false, false, false] },
+  { name: "Back Extension", weight: 0, reps: 12, sets: 3, setsCompleted: [false, false, false, false, false] },
+  { name: "Lat Pulldown", weight: 20, reps: 12, sets: 3, setsCompleted: [false, false, false, false, false] },
+];
+
+
+  const [workoutAExercises, setWorkoutAExercises] = useState(() => {
+    const saved = localStorage.getItem("workoutAExercises");
+    const exercises = saved ? JSON.parse(saved) : defaultWorkoutA;
+    // Ensure at least 4 exercises
+    while (exercises.length < 4) {
+      exercises.push({ name: "New Exercise", weight: 0, setsCompleted: [false, false, false, false, false] });
+    }
+    return exercises;
+  });
+
+  const [workoutBExercises, setWorkoutBExercises] = useState(() => {
+    const saved = localStorage.getItem("workoutBExercises");
+    const exercises = saved ? JSON.parse(saved) : defaultWorkoutB;
+    while (exercises.length < 4) {
+      exercises.push({ name: "New Exercise", weight: 0, setsCompleted: [false, false, false, false, false] });
+    }
+    return exercises;
+  });
+
+  const [history, setHistory] = useState(() => {
+    const saved = localStorage.getItem("history");
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  // Persist data
+  useEffect(() => {
+    localStorage.setItem("workoutAExercises", JSON.stringify(workoutAExercises));
+  }, [workoutAExercises]);
 
   useEffect(() => {
-    // Load from localStorage
-    const savedA = JSON.parse(localStorage.getItem("workoutA"));
-    const savedB = JSON.parse(localStorage.getItem("workoutB"));
-    const savedHistory = JSON.parse(localStorage.getItem("history")) || [];
-    const savedLast = localStorage.getItem("lastWorkout");
+    localStorage.setItem("workoutBExercises", JSON.stringify(workoutBExercises));
+  }, [workoutBExercises]);
 
-    setWorkoutA(savedA || defaultWorkout("A"));
-    setWorkoutB(savedB || defaultWorkout("B"));
-    setHistory(savedHistory);
-    setLastWorkout(savedLast);
-  }, []);
-
-  const defaultWorkout = (type) => {
-    if (type === "A") {
-      return [
-        { name: "Squat", weight: 0, setsCompleted: [false, false, false, false, false] },
-        { name: "Bench Press", weight: 0, setsCompleted: [false, false, false, false, false] },
-        { name: "Barbell Row", weight: 0, setsCompleted: [false, false, false, false, false] }
-      ];
-    } else {
-      return [
-        { name: "Squat", weight: 0, setsCompleted: [false, false, false, false, false] },
-        { name: "Overhead Press", weight: 0, setsCompleted: [false, false, false, false, false] },
-        { name: "Back Extension", weight: 0, setsCompleted: [false, false, false, false, false] }
-      ];
-    }
-  };
-
-  const saveState = () => {
-    localStorage.setItem("workoutA", JSON.stringify(workoutA));
-    localStorage.setItem("workoutB", JSON.stringify(workoutB));
+  useEffect(() => {
     localStorage.setItem("history", JSON.stringify(history));
-    localStorage.setItem("lastWorkout", lastWorkout);
+  }, [history]);
+
+  // Determine exercises for current workout
+  const exercises = currentWorkoutType === "A" ? workoutAExercises : workoutBExercises;
+  const setExercises = currentWorkoutType === "A" ? setWorkoutAExercises : setWorkoutBExercises;
+
+  // Finish workout
+  const finishWorkout = (exercisesSnapshot) => {
+    const newWorkout = {
+      type: currentWorkoutType,
+      date: new Date(),
+      exercises: exercisesSnapshot.map((ex) => ({ ...ex })), // copy
+    };
+
+    setHistory([newWorkout, ...history]);
+    localStorage.setItem("lastWorkout", currentWorkoutType);
+
+    // Switch workout type
+    setCurrentWorkoutType(currentWorkoutType === "A" ? "B" : "A");
   };
+
+  // Tabs
+  const [activeTab, setActiveTab] = useState("Workout");
 
   return (
-    <div
-      style={{
-        padding: 20,
-        minHeight: "100vh",       // full screen
-        maxWidth: 500,            // center on larger screens
-        margin: "0 auto",
-        fontSize: "1.25rem",      // larger text for mobile
-      }}
-    >
-      <h1 style={{ textAlign: "center", marginBottom: 20 }}>TJ's 5x5s</h1>
+    <div style={{ padding: "1rem", minHeight: "100vh", backgroundColor: "#121212", color: "#fff" }}>
+      {/* App Title */}
+      <h1 style={{ textAlign: "center", marginBottom: "1rem" }}>TJ's 5x5s</h1>
 
-      {/* Tab selector */}
-      <div style={{ display: "flex", marginBottom: 20 }}>
-        {["Workout", "Customize", "History"].map((tab) => (
+      {/* Tab Selector */}
+      <div style={{ display: "flex", gap: "1rem", marginBottom: "1rem", justifyContent: "center" }}>
+        {["Workout", "History", "Customize"].map((tab) => (
           <button
             key={tab}
-            onClick={() => setCurrentTab(tab)}
+            onClick={() => setActiveTab(tab)}
             style={{
-              flex: 1,
-              padding: 15,
-              fontSize: "1.1rem",
-              backgroundColor: currentTab === tab ? "#6b21a8" : "#ddd",
-              color: currentTab === tab ? "#fff" : "#000",
+              padding: "0.5rem 1rem",
+              borderRadius: "8px",
               border: "none",
-              cursor: "pointer"
+              cursor: "pointer",
+              backgroundColor: activeTab === tab ? "#8b5cf6" : "#1a1a1a",
+              color: "#fff",
+              fontWeight: "bold",
             }}
           >
             {tab}
@@ -79,37 +109,27 @@ export default function App() {
         ))}
       </div>
 
-      {/* Show last workout */}
-      {currentTab === "Workout" && lastWorkout && (
-        <p style={{ textAlign: "center", marginBottom: 10 }}>
-          Last workout: {lastWorkout}
-        </p>
-      )}
-
-      {/* Tabs */}
-      {currentTab === "Workout" && (
-        <WorkoutView
-          workoutA={workoutA}
-          setWorkoutA={setWorkoutA}
-          workoutB={workoutB}
-          setWorkoutB={setWorkoutB}
-          lastWorkout={lastWorkout}
-          setLastWorkout={setLastWorkout}
-          history={history}
-          setHistory={setHistory}
-          saveState={saveState}
-        />
-      )}
-      {currentTab === "Customize" && (
-        <CustomizeView
-          workoutA={workoutA}
-          setWorkoutA={setWorkoutA}
-          workoutB={workoutB}
-          setWorkoutB={setWorkoutB}
-          saveState={saveState}
-        />
-      )}
-      {currentTab === "History" && <HistoryView history={history} />}
+      {/* Active Tab */}
+      <div>
+        {activeTab === "Workout" && (
+          <WorkoutView
+            currentWorkoutType={currentWorkoutType}
+            setCurrentWorkoutType={setCurrentWorkoutType} // needed for A/B toggle
+            exercises={exercises}
+            setExercises={setExercises}
+            finishWorkout={finishWorkout}
+          />
+        )}
+        {activeTab === "History" && <HistoryView history={history} />}
+        {activeTab === "Customize" && (
+          <CustomizeView
+            workoutAExercises={workoutAExercises}
+            setWorkoutAExercises={setWorkoutAExercises}
+            workoutBExercises={workoutBExercises}
+            setWorkoutBExercises={setWorkoutBExercises}
+          />
+        )}
+      </div>
     </div>
   );
 }

@@ -1,171 +1,153 @@
-import React, { useState } from "react";
+import React from "react";
 
-export default function WorkoutView({
-  workoutA,
-  setWorkoutA,
-  workoutB,
-  setWorkoutB,
-  lastWorkout,
-  setLastWorkout,
-  history,
-  setHistory,
-  saveState
-}) {
-  const [currentWorkoutType, setCurrentWorkoutType] = useState(
-    lastWorkout === "A" ? "B" : "A"
-  );
+export default function WorkoutView({ currentWorkoutType, setCurrentWorkoutType, exercises, setExercises, finishWorkout }) {
+  // Incrementally toggle sets
+  const toggleExercise = (index) => {
+    const newExercises = [...exercises];
+    const sets = newExercises[index].setsCompleted || [];
 
-  const currentWorkout =
-    currentWorkoutType === "A" ? workoutA : workoutB;
-  const setCurrentWorkout =
-    currentWorkoutType === "A" ? setWorkoutA : setWorkoutB;
-
-  const toggleSet = (exerciseIndex) => {
-    const newWorkout = [...currentWorkout];
-    const sets = newWorkout[exerciseIndex].setsCompleted;
-
-    // Incrementally fill 1 set at a time
-    const nextIndex = sets.findIndex((s) => !s);
-    if (nextIndex !== -1) {
-      sets[nextIndex] = true;
+    const firstFalse = sets.indexOf(false);
+    if (firstFalse !== -1) {
+      sets[firstFalse] = true;
     } else {
-      // If all sets completed, reset to empty
       for (let i = 0; i < sets.length; i++) sets[i] = false;
     }
 
-    newWorkout[exerciseIndex].setsCompleted = sets;
-    setCurrentWorkout(newWorkout);
-    saveState();
+    newExercises[index].setsCompleted = sets;
+    setExercises(newExercises);
   };
 
-  const finishWorkout = () => {
-    const workoutRecord = {
-      date: new Date().toLocaleString(),
-      type: currentWorkoutType,
-      exercises: currentWorkout.map((e) => ({
-        name: e.name,
-        weight: e.weight,
-        setsCompleted: e.setsCompleted
-      }))
-    };
-
-    setHistory([workoutRecord, ...history]);
-    setLastWorkout(currentWorkoutType);
-    saveState();
-
-    // Switch to the other workout for next time
-    const nextWorkout = currentWorkoutType === "A" ? "B" : "A";
-    setCurrentWorkoutType(nextWorkout);
+  const updateField = (index, field, value) => {
+    const newExercises = [...exercises];
+    if (field === "weight" || field === "reps") {
+      // Allow empty string while typing
+      newExercises[index][field] = value === "" ? "" : Number(value);
+    } else {
+      newExercises[index][field] = value;
+    }
+    setExercises(newExercises);
   };
 
   return (
-    <div>
-      {/* Switch Workout Buttons */}
-      <div style={{ marginBottom: 20, textAlign: "center" }}>
-        <button
-          onClick={() => setCurrentWorkoutType("A")}
-          style={{
-            marginRight: 10,
-            padding: "12px 20px",
-            fontSize: "1.1rem",
-            backgroundColor: currentWorkoutType === "A" ? "#6b21a8" : "#ddd",
-            color: currentWorkoutType === "A" ? "#fff" : "#000",
-            border: "none",
-            borderRadius: 8,
-            cursor: "pointer"
-          }}
-        >
-          Workout A
-        </button>
-        <button
-          onClick={() => setCurrentWorkoutType("B")}
-          style={{
-            padding: "12px 20px",
-            fontSize: "1.1rem",
-            backgroundColor: currentWorkoutType === "B" ? "#6b21a8" : "#ddd",
-            color: currentWorkoutType === "B" ? "#fff" : "#000",
-            border: "none",
-            borderRadius: 8,
-            cursor: "pointer"
-          }}
-        >
-          Workout B
-        </button>
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "1.5rem" }}>
+      {/* Workout A/B switcher */}
+      <div style={{ display: "flex", gap: "1rem", width: "100%", maxWidth: "400px" }}>
+        {["A", "B"].map((type) => (
+          <button
+            key={type}
+            onClick={() => setCurrentWorkoutType(type)}
+            style={{
+              flex: 1,
+              padding: "0.5rem 1rem",
+              borderRadius: "8px",
+              border: "none",
+              cursor: "pointer",
+              backgroundColor: currentWorkoutType === type ? "#8b5cf6" : "#1a1a1a",
+              color: "#fff",
+              fontWeight: "bold",
+            }}
+          >
+            Workout {type}
+          </button>
+        ))}
       </div>
 
-      {/* Exercises */}
-      {currentWorkout.map((exercise, i) => (
-        <div
-          key={i}
-          style={{
-            marginBottom: 25,
-            padding: 20,
-            border: "1px solid #ccc",
-            borderRadius: 12,
-            fontSize: "1.2rem",
-          }}
-        >
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <strong>{exercise.name}</strong>
-            <input
-              type="number"
-              value={exercise.weight}
-              onChange={(e) => {
-                const newWorkout = [...currentWorkout];
-                newWorkout[i].weight = parseInt(e.target.value) || 0;
-                setCurrentWorkout(newWorkout);
-                saveState();
+      <h2>Workout {currentWorkoutType}</h2>
+
+      {/* Exercises list */}
+      <div style={{ display: "flex", flexDirection: "column", gap: "1rem", width: "100%", maxWidth: "400px" }}>
+        {exercises.map((ex, idx) => (
+          <div
+            key={ex.name}
+            onClick={() => toggleExercise(idx)}
+            style={{
+              padding: "0.75rem",
+              border: "1px solid #444",
+              borderRadius: "8px",
+              cursor: "pointer",
+              backgroundColor: "#121212",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                flexWrap: "wrap",
               }}
-              style={{ width: 70, padding: 5, fontSize: "1rem" }}
-            />{" "}
-            lb
-          </div>
+            >
+              <span style={{ fontWeight: "bold", fontSize: "1.1rem" }}>{ex.name}</span>
 
-          <div style={{ marginTop: 12 }}>
-            {exercise.setsCompleted.map((done, idx) => (
-              <span
-                key={idx}
-                onClick={() => toggleSet(i)}
-                style={{
-                  display: "inline-block",
-                  width: 35,
-                  height: 35,
-                  lineHeight: "35px",
-                  textAlign: "center",
-                  marginRight: 5,
-                  borderRadius: "50%",
-                  border: "1px solid #666",
-                  backgroundColor: done ? "#6b21a8" : "#fff",
-                  color: done ? "#fff" : "#000",
-                  cursor: "pointer",
-                  userSelect: "none",
-                  fontSize: "1.2rem"
-                }}
-              >
-                ✓
-              </span>
-            ))}
-          </div>
-        </div>
-      ))}
+              <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }} onClick={(e) => e.stopPropagation()}>
+                {/* Weight input */}
+                <input
+                  type="text"
+                  value={ex.weight}
+                  onChange={(e) => updateField(idx, "weight", e.target.value)}
+                  style={{
+                    width: "50px",
+                    borderRadius: "4px",
+                    border: "1px solid #555",
+                    backgroundColor: "#1a1a1a",
+                    color: "#fff",
+                    textAlign: "center",
+                  }}
+                />
+                <span style={{ color: "#aaa", fontSize: "0.9rem" }}>lbs</span>
 
-      <div style={{ textAlign: "center" }}>
-        <button
-          onClick={finishWorkout}
-          style={{
-            marginTop: 10,
-            padding: "15px 30px",
-            fontSize: "1.1rem",
-            backgroundColor: "#6b21a8",
-            color: "#fff",
-            border: "none",
-            borderRadius: 8,
-            cursor: "pointer"
-          }}
-        >
-          Finish Workout
-        </button>
+                {/* Reps input */}
+                <input
+                  type="text"
+                  value={ex.reps}
+                  onChange={(e) => updateField(idx, "reps", e.target.value)}
+                  style={{
+                    width: "40px",
+                    borderRadius: "4px",
+                    border: "1px solid #555",
+                    backgroundColor: "#1a1a1a",
+                    color: "#fff",
+                    textAlign: "center",
+                    marginLeft: "0.5rem",
+                  }}
+                />
+                <span style={{ color: "#aaa", fontSize: "0.9rem" }}>reps</span>
+              </div>
+            </div>
+
+            {/* Sets display */}
+            <div style={{ display: "flex", marginTop: "0.5rem", gap: "0.5rem" }}>
+              {Array.from({ length: ex.sets || 3 }, (_, i) => (
+                <div
+                  key={i}
+                  style={{
+                    width: "24px",
+                    height: "24px",
+                    borderRadius: "50%",
+                    backgroundColor: ex.setsCompleted?.[i] ? "#8b5cf6" : "#333",
+                    border: "1px solid #555",
+                  }}
+                />
+              ))}
+            </div>
+          </div>
+        ))}
       </div>
+
+      <button
+        onClick={() => finishWorkout(exercises)}
+        style={{
+          marginTop: "1.5rem",
+          padding: "0.75rem 1.5rem",
+          backgroundColor: "#8b5cf6",
+          color: "#fff",
+          fontWeight: "bold",
+          borderRadius: "8px",
+          border: "none",
+          cursor: "pointer",
+        }}
+      >
+        Finish Workout
+      </button>
     </div>
   );
 }

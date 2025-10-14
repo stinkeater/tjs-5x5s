@@ -7,15 +7,25 @@
 
     <!-- PWA manifest -->
     <link rel="manifest" href="/manifest.webmanifest" />
-    <meta name="theme-color" content="#6b21a8" />
+    <meta name="theme-color" content="#000000" />
+
+    <!-- iOS home screen icon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 
     <!-- Optional: favicon -->
-    <link rel="icon" href="/icon-192.png" />
+    <link rel="icon" href="/pwa-192x192.png" />
+
+    <!-- Ensure black background when opening as PWA -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+    <!-- Optional: app name on iOS home screen -->
+    <meta name="apple-mobile-web-app-title" content="TJ's 5x5s">
   </head>
-  <body>
+  <body style="margin:0; background-color:#000; color:#fff;">
     <div id="root"></div>
 
-    <!-- Vite scripts -->
+    <!-- Vite React entry -->
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

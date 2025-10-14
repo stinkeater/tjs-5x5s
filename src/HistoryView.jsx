@@ -2,37 +2,60 @@ import React from "react";
 
 export default function HistoryView({ history }) {
   if (!history || history.length === 0) {
-    return <p style={{ textAlign: "center", marginTop: 20 }}>No workouts yet.</p>;
+    return (
+      <div style={{ textAlign: "center", marginTop: "2rem" }}>
+        <h1>History</h1>
+        <p>No workouts yet.</p>
+      </div>
+    );
   }
 
   return (
-    <div>
-      {history.map((workout, i) => (
-        <div
-          key={i}
-          style={{
-            marginBottom: 20,
-            padding: 15,
-            border: "1px solid #ccc",
-            borderRadius: 12,
-            fontSize: "1.1rem",
-            backgroundColor: "#f9f9f9"
-          }}
-        >
-          <div style={{ marginBottom: 5 }}>
-            <strong>Workout {workout.type}</strong> — {workout.date}
+    <div style={{ padding: "1rem" }}>
+      <h1 style={{ textAlign: "center", marginBottom: "1rem" }}>History</h1>
+
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: "1rem",
+          width: "100%",
+          maxWidth: "400px",
+          margin: "0 auto", // centers container
+        }}
+      >
+        {history.map((workout, idx) => (
+          <div
+            key={idx}
+            style={{
+              backgroundColor: "#121212",
+              padding: "0.75rem",
+              borderRadius: "8px",
+              border: "1px solid #333",
+            }}
+          >
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+              <span style={{ fontWeight: "bold" }}>Workout {workout.type}</span>
+              <span style={{ fontSize: "0.9rem", color: "#aaa" }}>
+                {new Date(workout.date).toLocaleString()}
+              </span>
+            </div>
+
+            <div style={{ marginTop: "0.5rem" }}>
+              {workout.exercises.map((ex, exIdx) => (
+                <div
+                  key={exIdx}
+                  style={{ display: "flex", justifyContent: "space-between", color: "#fff" }}
+                >
+                  <span>{ex.name}</span>
+                  <span>{ex.weight} lb × {ex.reps}</span>
+
+                </div>
+              ))}
+            </div>
           </div>
-          <ul style={{ paddingLeft: 20, marginTop: 5 }}>
-            {workout.exercises.map((exercise, idx) => (
-              <li key={idx}>
-                {exercise.name}: {exercise.weight} lb —{" "}
-                {exercise.setsCompleted.filter(Boolean).length}/
-                {exercise.setsCompleted.length} sets
-              </li>
-            ))}
-          </ul>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 }
