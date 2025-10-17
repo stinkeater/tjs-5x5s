@@ -10,24 +10,22 @@ export default function App() {
   );
 
   const defaultWorkoutA = [
-  { name: "Squat", weight: 40, reps: 5, sets: 5, setsCompleted: [false, false, false, false, false] },
-  { name: "Bench Press", weight: 40, reps: 5, sets: 5, setsCompleted: [false, false, false, false, false] },
-  { name: "Mid Row", weight: 25, reps: 12, sets: 3, setsCompleted: [false, false, false, false, false] },
-  { name: "Lat Pulldown", weight: 20, reps: 12, sets: 3, setsCompleted: [false, false, false, false, false] },
-];
+    { name: "Squat", weight: 40, reps: 5, sets: 5, setsCompleted: [false, false, false, false, false] },
+    { name: "Bench Press", weight: 40, reps: 5, sets: 5, setsCompleted: [false, false, false, false, false] },
+    { name: "Mid Row", weight: 25, reps: 12, sets: 3, setsCompleted: [false, false, false] },
+    { name: "Lat Pulldown", weight: 20, reps: 12, sets: 3, setsCompleted: [false, false, false] },
+  ];
 
-const defaultWorkoutB = [
-  { name: "Squat", weight: 40, reps: 5, sets: 5, setsCompleted: [false, false, false, false, false] },
-  { name: "Overhead Press", weight: 40, reps: 5, sets: 5, setsCompleted: [false, false, false, false, false] },
-  { name: "Back Extension", weight: 0, reps: 12, sets: 3, setsCompleted: [false, false, false, false, false] },
-  { name: "Lat Pulldown", weight: 20, reps: 12, sets: 3, setsCompleted: [false, false, false, false, false] },
-];
-
+  const defaultWorkoutB = [
+    { name: "Squat", weight: 40, reps: 5, sets: 5, setsCompleted: [false, false, false, false, false] },
+    { name: "Overhead Press", weight: 40, reps: 5, sets: 5, setsCompleted: [false, false, false, false, false] },
+    { name: "Back Extension", weight: 0, reps: 12, sets: 3, setsCompleted: [false, false, false] },
+    { name: "Lat Pulldown", weight: 20, reps: 12, sets: 3, setsCompleted: [false, false, false] },
+  ];
 
   const [workoutAExercises, setWorkoutAExercises] = useState(() => {
     const saved = localStorage.getItem("workoutAExercises");
     const exercises = saved ? JSON.parse(saved) : defaultWorkoutA;
-    // Ensure at least 4 exercises
     while (exercises.length < 4) {
       exercises.push({ name: "New Exercise", weight: 0, setsCompleted: [false, false, false, false, false] });
     }
@@ -70,7 +68,7 @@ const defaultWorkoutB = [
     const newWorkout = {
       type: currentWorkoutType,
       date: new Date(),
-      exercises: exercisesSnapshot.map((ex) => ({ ...ex })), // copy
+      exercises: exercisesSnapshot.map((ex) => ({ ...ex })),
     };
 
     setHistory([newWorkout, ...history]);
@@ -78,6 +76,13 @@ const defaultWorkoutB = [
 
     // Switch workout type
     setCurrentWorkoutType(currentWorkoutType === "A" ? "B" : "A");
+  };
+
+  // Delete a workout entry
+  const deleteWorkout = (index) => {
+    const confirmed = window.confirm("Are you sure you want to delete this workout?");
+    if (!confirmed) return;
+    setHistory((prev) => prev.filter((_, i) => i !== index));
   };
 
   // Tabs
@@ -114,13 +119,15 @@ const defaultWorkoutB = [
         {activeTab === "Workout" && (
           <WorkoutView
             currentWorkoutType={currentWorkoutType}
-            setCurrentWorkoutType={setCurrentWorkoutType} // needed for A/B toggle
+            setCurrentWorkoutType={setCurrentWorkoutType}
             exercises={exercises}
             setExercises={setExercises}
             finishWorkout={finishWorkout}
           />
         )}
-        {activeTab === "History" && <HistoryView history={history} />}
+        {activeTab === "History" && (
+          <HistoryView history={history} deleteWorkout={deleteWorkout} />
+        )}
         {activeTab === "Customize" && (
           <CustomizeView
             workoutAExercises={workoutAExercises}

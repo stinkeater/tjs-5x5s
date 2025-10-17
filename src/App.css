@@ -1,10 +1,31 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+/* === Global layout and background === */
+html,
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+  background-color: #121212; /* solid dark gray */
+  color: white;
+  font-family: system-ui, sans-serif;
 }
 
+/* Ensures full-screen dark background on all pages */
+#root {
+  min-height: 100vh;
+  width: 100vw;
+  background-color: #121212;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch; /* instead of center */
+  justify-content: flex-start;
+  padding: 0; /* remove side padding */
+  box-sizing: border-box;
+  text-align: center;
+  overflow-x: hidden; /* prevent side scrollbars */
+}
+
+
+/* === Optional: your existing logo and animation styles === */
 .logo {
   height: 6em;
   padding: 1.5em;
@@ -33,6 +54,7 @@
   }
 }
 
+/* === Miscellaneous utility classes === */
 .card {
   padding: 2em;
 }
