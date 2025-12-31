@@ -1,6 +1,21 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
-export default function HistoryView({ history, deleteWorkout }) {
+export default function HistoryView({ history, deleteWorkout, updateWorkoutNotes }) {
+  const [editingIndex, setEditingIndex] = useState(null);
+
+  const onNotesChange = (index, value) => {
+    updateWorkoutNotes(index, value);
+    setEditingIndex(index);
+  };
+
+  // Reset editing indicator after 1 second
+  useEffect(() => {
+    if (editingIndex !== null) {
+      const timeout = setTimeout(() => setEditingIndex(null), 1000);
+      return () => clearTimeout(timeout);
+    }
+  }, [history, editingIndex]);
+
   return (
     <div
       style={{
@@ -17,7 +32,6 @@ export default function HistoryView({ history, deleteWorkout }) {
         overflowX: "hidden",
       }}
     >
-      {/* Inner wrapper for content */}
       <div
         style={{
           width: "100%",
@@ -45,7 +59,7 @@ export default function HistoryView({ history, deleteWorkout }) {
           >
             {history.map((session, index) => (
               <div
-                key={index}
+                key={session.client_id || index}
                 style={{
                   position: "relative",
                   backgroundColor: "#1a1a1a",
@@ -55,6 +69,9 @@ export default function HistoryView({ history, deleteWorkout }) {
                   boxSizing: "border-box",
                   transition: "background-color 0.2s",
                   cursor: "pointer",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "0.5rem",
                 }}
                 onMouseEnter={(e) =>
                   (e.currentTarget.style.backgroundColor = "#222222")
@@ -66,7 +83,7 @@ export default function HistoryView({ history, deleteWorkout }) {
                 {/* Delete button */}
                 <button
                   onClick={(e) => {
-                    e.stopPropagation(); // prevent parent click events
+                    e.stopPropagation();
                     deleteWorkout(index);
                   }}
                   style={{
@@ -132,6 +149,37 @@ export default function HistoryView({ history, deleteWorkout }) {
                     </div>
                   );
                 })}
+
+                {/* Notes input (auto-expand) */}
+                <textarea
+                  placeholder="Add notes..."
+                  value={session.notes || ""}
+                  onChange={(e) => onNotesChange(index, e.target.value)}
+                  onInput={(e) => {
+                    e.target.style.height = "auto";
+                    e.target.style.height = e.target.scrollHeight + "px";
+                  }}
+                  style={{
+                    width: "100%",
+                    padding: "0.5rem",
+                    borderRadius: "6px",
+                    border: "1px solid #333",
+                    backgroundColor: "#121212",
+                    color: "#fff",
+                    resize: "none",
+                    minHeight: "50px",
+                    overflow: "hidden",
+                  }}
+                />
+                <span
+                  style={{
+                    fontSize: "0.8rem",
+                    color: "#aaa",
+                    textAlign: "right",
+                  }}
+                >
+                  {editingIndex === index ? "Editing..." : "Saved"}
+                </span>
               </div>
             ))}
           </div>

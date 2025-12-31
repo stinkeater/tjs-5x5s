@@ -3,9 +3,9 @@
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: dark; /* force dark theme */
-  color: #ffffff; /* white text */
-  background-color: #000000; /* black background */
+  color-scheme: dark; 
+  color: #ffffff; 
+  background-color: #000000; 
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -75,7 +75,7 @@ h2 {
   line-height: 1.2;
 }
 
-/* Optional: style lists to match dark theme */
+/* style lists to match dark theme */
 ul, ol {
   padding-left: 1.5em;
   color: #ffffff;

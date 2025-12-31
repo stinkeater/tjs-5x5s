@@ -10,8 +10,8 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'robots.txt', 'apple-touch-icon.png'],
       manifest: {
-        name: "TJ's 5x5s",
-        short_name: "5x5s",
+        name: "IronLoop",
+        short_name: "IronLoop",
         description: "Track your workouts",
         theme_color: "#8b5cf6",
         background_color: "#242424",

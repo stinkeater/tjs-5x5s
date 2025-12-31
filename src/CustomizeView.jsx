@@ -36,6 +36,25 @@ export default function CustomizeView({
     return newExercises;
   };
 
+  const removeExercise = (workout, setWorkout, index) => {
+    const confirmed = window.confirm("Delete this exercise?");
+    if (confirmed) {
+      const newExercises = workout.filter((_, i) => i !== index);
+      setWorkout(newExercises);
+    }
+  };
+
+  const addExercise = (workout, setWorkout) => {
+    const newExercise = {
+      name: "New Exercise",
+      reps: 10,
+      sets: 5,
+      weight: 0,
+      setsCompleted: Array.from({ length: 5 }, () => false),
+    };
+    setWorkout([...workout, newExercise]);
+  };
+
   const renderExercises = (workout, setWorkout) =>
     workout.map((ex, idx) => (
       <div
@@ -52,8 +71,29 @@ export default function CustomizeView({
           marginTop: "0.5rem",
           width: "100%",
           boxSizing: "border-box",
+          position: "relative",
         }}
       >
+        {/* Delete button */}
+        <span
+          onClick={() => removeExercise(workout, setWorkout, idx)}
+          style={{
+            position: "absolute",
+            top: "6px",
+            right: "8px",
+            color: "#ff5555",
+            fontWeight: "bold",
+            cursor: "pointer",
+            fontSize: "1.5rem",
+            transition: "color 0.2s",
+            zIndex: 2,
+          }}
+          onMouseEnter={(e) => (e.currentTarget.style.color = "#ff8888")}
+          onMouseLeave={(e) => (e.currentTarget.style.color = "#ff5555")}
+        >
+          ×
+        </span>
+
         {/* Exercise name */}
         <input
           type="text"
@@ -62,13 +102,15 @@ export default function CustomizeView({
             setWorkout(updateExercise(workout, idx, "name", e.target.value))
           }
           style={{
-            flex: "1 1 100%",
+            width: "calc(100% - 2rem)",
             backgroundColor: "#121212",
             border: "1px solid #333",
             color: "#fff",
             borderRadius: "6px",
             padding: "0.4rem",
             marginBottom: "0.3rem",
+            paddingRight: "1.75rem", 
+            boxSizing: "border-box",
           }}
         />
 
@@ -142,18 +184,25 @@ export default function CustomizeView({
     <div
       style={{
         minHeight: "100vh",
-        width: "100vw", // ✅ full viewport width
+        width: "100vw",
         backgroundColor: "#121212",
         padding: "1rem 0",
         boxSizing: "border-box",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        overflowX: "hidden", // prevents horizontal scroll
+        overflowX: "hidden",
       }}
     >
-      {/* Inner wrapper for content */}
-      <div style={{ width: "100%", maxWidth: "500px", padding: "0 1rem", boxSizing: "border-box" }}>
+      {/* Inner wrapper */}
+      <div
+        style={{
+          width: "100%",
+          maxWidth: "500px",
+          padding: "0 1rem",
+          boxSizing: "border-box",
+        }}
+      >
         <h1 style={{ textAlign: "center", marginBottom: "1rem" }}>
           Customize Workouts
         </h1>
@@ -161,9 +210,57 @@ export default function CustomizeView({
         <h2 style={{ textAlign: "center" }}>Workout A</h2>
         {renderExercises(workoutAExercises, setWorkoutAExercises)}
 
+        {/* Add Exercise Button for Workout A */}
+        <button
+          onClick={() => addExercise(workoutAExercises, setWorkoutAExercises)}
+          style={{
+            marginTop: "0.75rem",
+            width: "100%",
+            padding: "0.6rem",
+            backgroundColor: "#1a1a1a",
+            color: "#fff",
+            border: "1px solid #333",
+            borderRadius: "8px",
+            cursor: "pointer",
+            transition: "background-color 0.2s",
+          }}
+          onMouseEnter={(e) =>
+            (e.currentTarget.style.backgroundColor = "#222222")
+          }
+          onMouseLeave={(e) =>
+            (e.currentTarget.style.backgroundColor = "#1a1a1a")
+          }
+        >
+          + Add Exercise
+        </button>
+
         <div style={{ marginTop: "1.5rem" }}>
           <h2 style={{ textAlign: "center" }}>Workout B</h2>
           {renderExercises(workoutBExercises, setWorkoutBExercises)}
+
+          {/* Add Exercise Button for Workout B */}
+          <button
+            onClick={() => addExercise(workoutBExercises, setWorkoutBExercises)}
+            style={{
+              marginTop: "0.75rem",
+              width: "100%",
+              padding: "0.6rem",
+              backgroundColor: "#1a1a1a",
+              color: "#fff",
+              border: "1px solid #333",
+              borderRadius: "8px",
+              cursor: "pointer",
+              transition: "background-color 0.2s",
+            }}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.backgroundColor = "#222222")
+            }
+            onMouseLeave={(e) =>
+              (e.currentTarget.style.backgroundColor = "#1a1a1a")
+            }
+          >
+            + Add Exercise
+          </button>
         </div>
       </div>
     </div>
