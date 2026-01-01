@@ -8,7 +8,10 @@
     />
 
     <title>IronLoop</title>
-    <meta name="description" content="Customize your workouts and track progress over time. Your history syncs automatically across devices. Always free to use." />
+    <meta
+      name="description"
+      content="Customize your workouts and track progress over time. Your history syncs automatically across devices. Always free to use."
+    />
 
     <!-- Open Graph (Discord, Slack, etc.) -->
     <meta property="og:type" content="website" />
@@ -23,7 +26,7 @@
       content="https://ironloop.stinkeater.com/og-image-v2.png"
     />
 
-    <!-- Twitter card (also used by some platforms) -->
+    <!-- Twitter card -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="IronLoop" />
     <meta
@@ -37,7 +40,17 @@
 
     <!-- PWA manifest -->
     <link rel="manifest" href="/manifest.webmanifest" />
-    <meta name="theme-color" content="#000000" />
+
+    <!-- Status bar / browser UI color -->
+    <meta name="theme-color" content="#1f1f1f" />
+
+    <!-- iOS PWA settings -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
+    <meta name="apple-mobile-web-app-title" content="IronLoop" />
 
     <!-- iOS home screen icon -->
     <link
@@ -48,21 +61,11 @@
 
     <!-- Favicon -->
     <link rel="icon" href="/favicon.ico" />
-
-    <!-- Ensure black background when opening as PWA -->
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta
-      name="apple-mobile-web-app-status-bar-style"
-      content="black-translucent"
-    />
-
-    <!-- App name on iOS home screen -->
-    <meta name="apple-mobile-web-app-title" content="IronLoop" />
-    <script type="module" crossorigin src="/assets/index-C2FD-Yxo.js"></script>
+    <script type="module" crossorigin src="/assets/index-BJt6yJw9.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-BBbE9aBf.css">
   <link rel="manifest" href="/manifest.webmanifest"><script id="vite-plugin-pwa:register-sw" src="/registerSW.js"></script></head>
 
-  <body style="margin:0; background-color:#000; color:#fff;">
+  <body style="margin:0; background-color:#1f1f1f; color:#fff;">
     <div id="root"></div>
 
     <!-- Vite React entry -->
