@@ -2,27 +2,77 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1"
+    />
+
     <title>IronLoop</title>
+    <meta
+      name="description"
+      content="Customize your workouts and track progress over time. Your history syncs automatically across devices. Always free to use."
+    />
+
+    <!-- Open Graph (Discord, Slack, iMessage, etc.) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://ironloop.fit/" />
+    <meta property="og:title" content="IronLoop" />
+    <meta
+      property="og:description"
+      content="Customize your workouts and track progress over time. Your history syncs automatically across devices. Always free to use."
+    />
+    <meta
+      property="og:image"
+      content="https://ironloop.fit/og-image.png?v=1"
+    />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+
+    <!-- Twitter / X card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="IronLoop" />
+    <meta
+      name="twitter:description"
+      content="Customize your workouts and track progress over time. Your history syncs automatically across devices. Always free to use."
+    />
+    <meta
+      name="twitter:image"
+      content="https://ironloop.fit/og-image.png?v=1"
+    />
 
     <!-- PWA manifest -->
     <link rel="manifest" href="/manifest.webmanifest" />
-    <meta name="theme-color" content="#000000" />
+
+    <!-- Browser / system UI color (match app background) -->
+    <meta name="theme-color" content="#121212" />
+
+    <!-- iOS PWA settings -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
+    <meta name="apple-mobile-web-app-title" content="IronLoop" />
 
     <!-- iOS home screen icon -->
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="/apple-touch-icon.png"
+    />
 
-    <!-- Optional: favicon -->
-    <link rel="icon" href="/pwa-192x192.png" />
-
-    <!-- Ensure black background when opening as PWA -->
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-
-    <!-- Optional: app name on iOS home screen -->
-    <meta name="apple-mobile-web-app-title" content="IronLoop">
+    <!-- Favicon -->
+    <link rel="icon" href="/favicon.ico" />
   </head>
-  <body style="margin:0; background-color:#000; color:#fff;">
+
+  <body
+    style="
+      margin: 0;
+      background-color: #121212;
+      color: #fff;
+    "
+  >
     <div id="root"></div>
 
     <!-- Vite React entry -->

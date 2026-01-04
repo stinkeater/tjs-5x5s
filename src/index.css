@@ -1,11 +1,29 @@
+@font-face {
+  font-family: "Horizon";
+  src: url("./assets/fonts/horizon.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Horizon Outlined";
+  src: url("./assets/fonts/horizon_outlined.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: dark; 
-  color: #ffffff; 
-  background-color: #000000; 
+  color-scheme: dark;
+  color: #ffffff;
+
+  /* Match the app background (also affects iOS overscroll area) */
+  background-color: #121212;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -13,23 +31,67 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Use this only where needed (app title) */
+.ironloop-title {
+  font-family: "Horizon", system-ui, sans-serif;
+}
+
+/* === GLOBAL RESET FOR FULL-WIDTH APP === */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
 body {
   margin: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  min-width: 320px;
-  min-height: 100vh;
-  background-color: #242424;
+  padding: 0;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+
+  /* Match the app background (also affects iOS overscroll area) */
+  background-color: #121212;
+
   color: #ffffff;
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
 }
 
-h1, h2, h3, h4, h5, h6 {
+/* IMPORTANT:
+   Do NOT center the app at the body level.
+   Let React control layout. */
+body {
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+/* Root container should always be full width */
+#root {
+  width: 100%;
+  max-width: 100%;
+  min-height: 100dvh;
+  margin: 0;
+  padding: 0;
+
+  /* App surface */
+  background-color: #121212;
+
+  overflow-x: hidden;
+}
+
+/* Headings */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   color: #ffffff;
 }
 
+/* Links */
 a {
   font-weight: 500;
   color: #646cff;
@@ -39,6 +101,7 @@ a:hover {
   color: #535bf2;
 }
 
+/* Buttons */
 button {
   border-radius: 8px;
   border: 1px solid transparent;
@@ -59,9 +122,16 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
+/* Inputs should never overflow */
+input,
+textarea {
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
 /* Checkbox styling */
 input[type="checkbox"] {
-  accent-color: #8b5cf6; /* purple checkmark */
+  accent-color: #8b5cf6;
 }
 
 /* Responsive headings */
@@ -69,27 +139,31 @@ h1 {
   font-size: 3em;
   line-height: 1.1;
 }
-
 h2 {
   font-size: 2em;
   line-height: 1.2;
 }
 
-/* style lists to match dark theme */
-ul, ol {
+/* Lists */
+ul,
+ol {
   padding-left: 1.5em;
   color: #ffffff;
 }
 
-/* Media query: force dark mode */
+/* Force dark mode */
 @media (prefers-color-scheme: light) {
   :root {
     color-scheme: dark;
     color: #ffffff;
-    background-color: #000000;
+
+    /* Keep consistent */
+    background-color: #121212;
   }
   body {
-    background-color: #000000;
+    /* Keep consistent */
+    background-color: #121212;
+
     color: #ffffff;
   }
   a:hover {
