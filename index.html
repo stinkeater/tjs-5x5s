@@ -3,9 +3,10 @@
   <head>
     <meta charset="UTF-8" />
 
+    <!-- IMPORTANT for iOS safe-area rendering (prevents the black top strip in light mode) -->
     <meta
       name="viewport"
-      content="width=device-width, initial-scale=1, maximum-scale=1"
+      content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover"
     />
 
     <title>IronLoop</title>
@@ -22,10 +23,7 @@
       property="og:description"
       content="Customize your workouts and track progress over time. Your history syncs automatically across devices. Always free to use."
     />
-    <meta
-      property="og:image"
-      content="https://ironloop.fit/og-image.png?v=1"
-    />
+    <meta property="og:image" content="https://ironloop.fit/og-image.png?v=1" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
 
@@ -36,31 +34,23 @@
       name="twitter:description"
       content="Customize your workouts and track progress over time. Your history syncs automatically across devices. Always free to use."
     />
-    <meta
-      name="twitter:image"
-      content="https://ironloop.fit/og-image.png?v=1"
-    />
+    <meta name="twitter:image" content="https://ironloop.fit/og-image.png?v=1" />
 
     <!-- PWA manifest -->
     <link rel="manifest" href="/manifest.webmanifest" />
 
-    <!-- Browser / system UI color (match app background) -->
+    <!-- Browser / system UI color (match app background).
+         Note: App/main also updates this dynamically, but iOS can be picky. -->
     <meta name="theme-color" content="#121212" />
 
     <!-- iOS PWA settings -->
     <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta
-      name="apple-mobile-web-app-status-bar-style"
-      content="black-translucent"
-    />
+    <!-- Use "default" so iOS does not force a dark status-bar strip in light mode -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <meta name="apple-mobile-web-app-title" content="IronLoop" />
 
     <!-- iOS home screen icon -->
-    <link
-      rel="apple-touch-icon"
-      sizes="180x180"
-      href="/apple-touch-icon.png"
-    />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
 
     <!-- Favicon -->
     <link rel="icon" href="/favicon.ico" />
@@ -68,13 +58,7 @@
     <link rel="stylesheet" crossorigin href="/assets/index-BgOZYfSp.css">
   <link rel="manifest" href="/manifest.webmanifest"><script id="vite-plugin-pwa:register-sw" src="/registerSW.js"></script></head>
 
-  <body
-    style="
-      margin: 0;
-      background-color: #121212;
-      color: #fff;
-    "
-  >
+  <body style="margin: 0;">
     <div id="root"></div>
 
     <!-- Vite React entry -->
